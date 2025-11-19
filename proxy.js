@@ -1,3 +1,5 @@
+// proxy.js (or proxy.ts)
+
 import arcjet, { createMiddleware, detectBot, shield } from "@arcjet/next";
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
@@ -40,8 +42,12 @@ const clerk = clerkMiddleware(async (auth, req) => {
   return NextResponse.next();
 });
 
-// Chain middlewares - ArcJet runs first, then Clerk
-export default createMiddleware(aj, clerk);
+// 🌟 THE FIX: Wrap the chained middleware in the required 'proxy' function
+export function proxy(req) {
+  // Use createMiddleware to chain Arcjet and Clerk logic
+  const chainedMiddleware = createMiddleware(aj, clerk);
+  return chainedMiddleware(req);
+}
 
 export const config = {
   matcher: [
