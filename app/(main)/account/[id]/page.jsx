@@ -1,3 +1,5 @@
+// app\(main)\account\[id]\page.jsx (Corrected)
+
 import { Suspense } from "react";
 import { getAccountWithTransactions } from "@/actions/account";
 import { BarLoader } from "react-spinners";
@@ -6,7 +8,13 @@ import { notFound } from "next/navigation";
 import { AccountChart } from "../_components/account-chart";
 
 export default async function AccountPage({ params }) {
-  const accountData = await getAccountWithTransactions(params.id);
+  // --- FIX APPLIED HERE ---
+  // Await params before accessing its properties to correctly unwrap the ID.
+  const { id } = await params;
+  
+  // Pass the correctly extracted 'id' to the data fetching function.
+  const accountData = await getAccountWithTransactions(id);
+  // -------------------------
 
   if (!accountData) {
     notFound();
@@ -29,7 +37,7 @@ export default async function AccountPage({ params }) {
 
         <div className="text-right pb-2">
           <div className="text-xl sm:text-2xl font-bold">
-            ${parseFloat(account.balance).toFixed(2)}
+            {"\u20B9"}{parseFloat(account.balance).toFixed(2)}
           </div>
           <p className="text-sm text-muted-foreground">
             {account._count.transactions} Transactions
