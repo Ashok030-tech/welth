@@ -138,7 +138,7 @@ export function AccountChart({ transactions }) {
                 fontSize={12}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => `$${value}`}
+                tickFormatter={(value) => `\u20B9${value}`}
               />
               <Tooltip
                 formatter={(value) => [`\u20B9${value}`, undefined]}
